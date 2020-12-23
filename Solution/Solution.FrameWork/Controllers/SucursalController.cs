@@ -26,7 +26,36 @@ namespace Solution.FrameWork.Controllers
                                      email = sucursal.EMAIL
                                  }).ToList();
             }
-                return View(listaSucursal);
+            return View(listaSucursal);
+        }
+
+        public ActionResult Agregar()
+        {
+            return View();
+        }
+        [HttpPost]
+        public ActionResult Agregar(SucursalCLS sucursalCLS)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(sucursalCLS);
+            }
+            else
+            {
+                using (var db = new BDPasajeEntities())
+                {
+                    Sucursal sucursal = new Sucursal();
+                    sucursal.NOMBRE = sucursalCLS.nombre;
+                    sucursal.DIRECCION = sucursalCLS.direccion;
+                    sucursal.TELEFONO = sucursalCLS.telefono;
+                    sucursal.EMAIL = sucursalCLS.email;
+                    sucursal.FECHAAPERTURA = sucursalCLS.fechaapertura;
+                    sucursal.BHABILITADO = 1;
+                    db.Sucursal.Add(sucursal);
+                    db.SaveChanges();
+                }
+            }
+            return RedirectToAction("Index");
         }
     }
 }

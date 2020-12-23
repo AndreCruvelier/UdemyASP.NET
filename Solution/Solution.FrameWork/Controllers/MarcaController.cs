@@ -28,5 +28,36 @@ namespace Solution.FrameWork.Controllers
             }
             return View(listaMarca);
         }
+
+        public ActionResult Agregar()
+        {
+            return View();
+        }
+
+        //Método por como serán enviados los datos
+        [HttpPost]
+        public ActionResult Agregar(MarcaCLS marcaCLS)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(marcaCLS);
+            }
+            else
+            {
+                using (var bd = new BDPasajeEntities())
+                {
+                    //Instanciamos el objeto marca
+                    Marca marca = new Marca();
+                    marca.NOMBRE = marcaCLS.nombre;
+                    marca.DESCRIPCION = marcaCLS.descripcion;
+                    marca.BHABILITADO = marcaCLS.bhabilitado;
+                    //Enviamos los datos a la base de datos
+                    bd.Marca.Add(marca);
+                    //Guardamos los datos en la base de datos
+                    bd.SaveChanges();
+                }
+            }
+            return RedirectToAction("Index");
+        }
     }
 }
